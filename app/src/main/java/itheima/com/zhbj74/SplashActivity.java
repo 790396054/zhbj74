@@ -68,7 +68,7 @@ public class SplashActivity extends Activity {
                     //第一次进入，进入引导页
                     intent = new Intent(mContext,GuideActivity.class);
                     //设置是否第一次进入为false
-                    PreUtils.setBoolean(mContext,"is_first_enter",false);
+                    //PreUtils.setBoolean(mContext,"is_first_enter",false);
                 }else{
                     //进入主页
                     intent = new Intent(mContext,MainActivity.class);
