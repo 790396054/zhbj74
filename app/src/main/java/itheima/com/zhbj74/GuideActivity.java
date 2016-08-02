@@ -21,6 +21,9 @@ import java.util.List;
 import itheima.com.zhbj74.utils.LogUtils;
 import itheima.com.zhbj74.utils.PreUtils;
 
+/**
+ * 引导页面
+ */
 public class GuideActivity extends Activity {
 
     private ViewPager mViewPager;

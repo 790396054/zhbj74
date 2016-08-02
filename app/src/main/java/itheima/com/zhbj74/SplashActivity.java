@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import itheima.com.zhbj74.utils.PreUtils;
 
 /**
- * 闪屏动画
+ * 启动闪屏动画
  */
 public class SplashActivity extends Activity {
 
