@@ -8,6 +8,8 @@ import android.view.Window;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
+import org.xutils.x;
+
 import itheima.com.zhbj74.fragment.ContentFragment;
 import itheima.com.zhbj74.fragment.LeftMenuFragment;
 
@@ -22,8 +24,11 @@ public class MainActivity extends SlidingFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        x.Ext.init(getApplication());//初始化xUtils
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题
         setContentView(R.layout.activity_main);
+
 
         setBehindContentView(R.layout.left_menu);
         SlidingMenu slidingMenu = getSlidingMenu();
