@@ -6,9 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import itheima.com.zhbj74.MainActivity;
 import itheima.com.zhbj74.R;
 import itheima.com.zhbj74.base.BasePager;
 import itheima.com.zhbj74.base.impl.GovoPager;
@@ -16,6 +19,7 @@ import itheima.com.zhbj74.base.impl.HomePager;
 import itheima.com.zhbj74.base.impl.NewsPager;
 import itheima.com.zhbj74.base.impl.SettingsPager;
 import itheima.com.zhbj74.base.impl.SmartServicePager;
+import itheima.com.zhbj74.view.NoScrollViewPager;
 
 /**
  * 主页面 Fragment
@@ -28,12 +32,13 @@ public class ContentFragment extends BaseFragment{
 
     private List<BasePager> mPagers;//五个标签页的集合
 
-    private ViewPager vpContent;
+    private NoScrollViewPager vpContent;
 
     @Override
     public View initView() {
         View view = View.inflate(mActivity, R.layout.fragment_content,null);
-        vpContent = (ViewPager) view.findViewById(R.id.vp_content);
+        vpContent = (NoScrollViewPager) view.findViewById(R.id.vp_content);
+        mRadioGroup = (RadioGroup) view.findViewById(R.id.rg_group);
         return view;
     }
 
@@ -48,6 +53,73 @@ public class ContentFragment extends BaseFragment{
         mPagers.add(new SettingsPager(mActivity));
 
         vpContent.setAdapter(new ContentAdapter());
+
+        // 底部导航栏标签切换监听
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.rb_home:
+                        vpContent.setCurrentItem(0,false);
+                        break;
+                    case R.id.rb_news:
+                        vpContent.setCurrentItem(1,false);
+                        break;
+                    case R.id.rb_smart:
+                        vpContent.setCurrentItem(2,false);
+                        break;
+                    case R.id.rb_gov:
+                        vpContent.setCurrentItem(3,false);
+                        break;
+                    case R.id.rb_settings:
+                        vpContent.setCurrentItem(4,false);
+                        break;
+                }
+            }
+        });
+
+        vpContent.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                mPagers.get(position).initData();
+                if (position == 0 || position == mPagers.size() -1){
+                    //首页和设置页侧滑栏不可用
+                    setSlindingMenuEnable(false);
+                }else {
+                    //其他页面开启侧边栏
+                    setSlindingMenuEnable(true);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        // 手动的初始化第一页的数据
+        mPagers.get(0).initData();
+        //禁用侧滑菜单
+        setSlindingMenuEnable(false);
+    }
+
+    /**
+     * 设置侧滑菜单是否可用
+     * @param enable
+     */
+    private void setSlindingMenuEnable(boolean enable){
+        MainActivity mainActivity = (MainActivity) mActivity;
+        SlidingMenu slidingMenu = mainActivity.getSlidingMenu();
+        if (enable){
+            slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        }else {
+            slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+        }
     }
 
     class ContentAdapter extends PagerAdapter{
@@ -78,13 +150,15 @@ public class ContentFragment extends BaseFragment{
         public Object instantiateItem(ViewGroup container, int position) {
             BasePager basePager = mPagers.get(position);
             View view = basePager.mRootView;
+            //basePager.initData();//初始化数据 ,viewpager每次都会加载下一个页面，这样会浪费性能和流量
+            //故不再此处初始化数据
             container.addView(view);
             return view;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
+            //super.destroyItem(container, position, object);
             container.removeView((View) object);
         }
     }

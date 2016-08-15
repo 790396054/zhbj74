@@ -3,6 +3,7 @@ package itheima.com.zhbj74.base.impl;
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.TextView;
 
 import itheima.com.zhbj74.base.BasePager;
@@ -25,9 +26,11 @@ public class NewsPager extends BasePager {
         textView.setText("新闻");
         textView.setTextColor(Color.RED);
         textView.setGravity(Gravity.CENTER);
-
+        textView.setTextSize(22);
         flContent.addView(textView);
 
         tvTitle.setText("新闻");
+        //显示侧滑按钮
+        imgBtn.setVisibility(View.VISIBLE);
     }
 }
