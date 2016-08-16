@@ -1,10 +1,7 @@
 package itheima.com.zhbj74.base.impl;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -16,7 +13,12 @@ import org.xutils.x;
 import java.util.ArrayList;
 
 import itheima.com.zhbj74.MainActivity;
+import itheima.com.zhbj74.base.BaseMenuDetailPager;
 import itheima.com.zhbj74.base.BasePager;
+import itheima.com.zhbj74.base.impl.menu.InteractMenuDetailPager;
+import itheima.com.zhbj74.base.impl.menu.NewsMenuDetailPager;
+import itheima.com.zhbj74.base.impl.menu.PhotosMenuDetailPager;
+import itheima.com.zhbj74.base.impl.menu.TopicMenuDetailPager;
 import itheima.com.zhbj74.domain.NewsMenu;
 import itheima.com.zhbj74.fragment.LeftMenuFragment;
 import itheima.com.zhbj74.utils.CacheUtils;
@@ -36,16 +38,12 @@ public class NewsPager extends BasePager {
 
     private static final String TAG = "NewsPager";
 
+    private ArrayList<BaseMenuDetailPager> mBaseMenuPagers;//新闻详情页
+
+    private NewsMenu newsMenuData;//新闻数据
+
     @Override
     public void initData() {
-        //要给帧布局填充的对象
-        TextView textView = new TextView(mActivity);
-        textView.setText("新闻");
-        textView.setTextColor(Color.RED);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(22);
-        flContent.addView(textView);
-
         tvTitle.setText("新闻");
         //显示侧滑按钮
         imgBtn.setVisibility(View.VISIBLE);
@@ -94,17 +92,38 @@ public class NewsPager extends BasePager {
 
     private void processData(String json){
         Gson gson = new Gson();
-        NewsMenu newsMenu = gson.fromJson(json, NewsMenu.class);
-        LogUtils.i(TAG,"解析数据。。。"+newsMenu.toString());
+        newsMenuData = gson.fromJson(json, NewsMenu.class);
+        LogUtils.i(TAG,"解析数据。。。"+newsMenuData.toString());
         //设置侧边栏数据
-        setLeftMennuData(newsMenu.data);
+        setLeftMenuData(newsMenuData.data);
 
+        mBaseMenuPagers = new ArrayList<>();
+        mBaseMenuPagers.add(new NewsMenuDetailPager(mActivity));
+        mBaseMenuPagers.add(new TopicMenuDetailPager(mActivity));
+        mBaseMenuPagers.add(new PhotosMenuDetailPager(mActivity));
+        mBaseMenuPagers.add(new InteractMenuDetailPager(mActivity));
+
+        // 将新闻菜单详情页设置为默认页面
+        setCurrentDetailPager(0);
     }
 
     //设置侧边栏数据
-    private void setLeftMennuData(ArrayList<NewsMenu.NewsMenuData> mennuData){
+    private void setLeftMenuData(ArrayList<NewsMenu.NewsMenuData> menuData){
         MainActivity mainActivity = (MainActivity) mActivity;
         LeftMenuFragment fragment = mainActivity.getLeftMenuFragment();
-        fragment.setMenuData(mennuData);
+        fragment.setMenuData(menuData);
     }
+
+    //设置菜单详情页
+    public void setCurrentDetailPager(int position){
+        BaseMenuDetailPager menuDetailPager = mBaseMenuPagers.get(position);
+
+        View view = menuDetailPager.mRootView;
+        tvTitle.setText(newsMenuData.data.get(position).title);
+        flContent.removeAllViews();
+        flContent.addView(view);
+
+        menuDetailPager.initData();
+    }
+
 }

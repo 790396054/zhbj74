@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import itheima.com.zhbj74.MainActivity;
 import itheima.com.zhbj74.R;
+import itheima.com.zhbj74.base.impl.NewsPager;
 import itheima.com.zhbj74.domain.NewsMenu;
 
 /**
@@ -59,10 +60,25 @@ public class LeftMenuFragment extends BaseFragment {
                 toggle();//收起侧边栏
                 //刷新页面
                 adapter.notifyDataSetChanged();
+                // 侧边栏点击之后, 要修改新闻中心的FrameLayout中的内容
+                setCurrentDetailPager(position);
             }
         });
 
     }
+
+    //设置当前菜单的详情页
+    private void setCurrentDetailPager(int position) {
+        //获取新闻中心的对象
+        MainActivity mainActivity = (MainActivity) mActivity;
+        //获取ContentFragment
+        ContentFragment fragment = mainActivity.getContentFragment();
+        //获取新闻业
+        NewsPager newPager = fragment.getNewPager();
+        //设置新闻详情页
+        newPager.setCurrentDetailPager(position);
+    }
+
 
     private void toggle() {
         MainActivity mainActivity = (MainActivity) mActivity;
