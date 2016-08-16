@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -12,8 +13,12 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.util.ArrayList;
+
+import itheima.com.zhbj74.MainActivity;
 import itheima.com.zhbj74.base.BasePager;
 import itheima.com.zhbj74.domain.NewsMenu;
+import itheima.com.zhbj74.fragment.LeftMenuFragment;
 import itheima.com.zhbj74.utils.CacheUtils;
 import itheima.com.zhbj74.utils.GlobalConstant;
 import itheima.com.zhbj74.utils.LogUtils;
@@ -71,6 +76,7 @@ public class NewsPager extends BasePager {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 LogUtils.i(TAG,"访问服务器错误。。。"+ex.toString());
+                Toast.makeText(mActivity, "访问网络错误", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -90,5 +96,15 @@ public class NewsPager extends BasePager {
         Gson gson = new Gson();
         NewsMenu newsMenu = gson.fromJson(json, NewsMenu.class);
         LogUtils.i(TAG,"解析数据。。。"+newsMenu.toString());
+        //设置侧边栏数据
+        setLeftMennuData(newsMenu.data);
+
+    }
+
+    //设置侧边栏数据
+    private void setLeftMennuData(ArrayList<NewsMenu.NewsMenuData> mennuData){
+        MainActivity mainActivity = (MainActivity) mActivity;
+        LeftMenuFragment fragment = mainActivity.getLeftMenuFragment();
+        fragment.setMenuData(mennuData);
     }
 }

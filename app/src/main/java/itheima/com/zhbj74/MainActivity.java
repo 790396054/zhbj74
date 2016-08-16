@@ -33,7 +33,7 @@ public class MainActivity extends SlidingFragmentActivity {
         setBehindContentView(R.layout.left_menu);
         SlidingMenu slidingMenu = getSlidingMenu();
         slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);//全局触摸
-        slidingMenu.setBehindOffset(200);
+        slidingMenu.setBehindOffset(400);
 
         initFragment();
     }
@@ -46,5 +46,14 @@ public class MainActivity extends SlidingFragmentActivity {
         transaction.replace(R.id.fl_left_menu,new LeftMenuFragment(),TAG_LEFT_MENU);
 
         transaction.commit();
+    }
+
+    /**
+     * 返回 LeftMenuFragment
+     * @return
+     */
+    public LeftMenuFragment getLeftMenuFragment(){
+        FragmentManager manager = getSupportFragmentManager();
+        return (LeftMenuFragment) manager.findFragmentByTag(TAG_LEFT_MENU);
     }
 }

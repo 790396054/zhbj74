@@ -6,6 +6,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
+import itheima.com.zhbj74.MainActivity;
 import itheima.com.zhbj74.R;
 
 /**
@@ -32,11 +35,24 @@ public class BasePager {
         tvTitle = (TextView) view.findViewById(R.id.tv_title);
         imgBtn = (ImageButton) view.findViewById(R.id.img_btn);
         flContent = (FrameLayout) view.findViewById(R.id.fl_content);
+
+        imgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggle();
+            }
+        });
         return view;
     }
 
     //初始化数据
     public void initData(){
 
+    }
+
+    private void toggle(){
+        MainActivity mainActivity = (MainActivity) mActivity;
+        SlidingMenu slidingMenu = mainActivity.getSlidingMenu();
+        slidingMenu.toggle();
     }
 }
